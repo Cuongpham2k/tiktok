@@ -1,9 +1,21 @@
+import Tippy from '@tippyjs/react/headless';
 import className from 'classnames/bind';
 import style from './Header.module.scss';
 import { AiFillCloseCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
+import { useEffect, useState } from 'react';
+import { Wrapper as PopperWrapper } from '~/components/Popper';
+import AccountItem from '../AccountItem';
+import Button from '~/components/Button';
 const cx = className.bind(style);
 function Header() {
+    const [searchResult, setSearchResult] = useState([]);
+    useEffect(() => {
+        setTimeout(() => {
+            setSearchResult([]);
+        }, 0);
+    }, []);
+
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -80,7 +92,23 @@ function Header() {
                     </svg>
                 </div>
                 <div className={cx('search')}>
-                    <input type="text" placeholder="Search" spellCheck={false} />
+                    <Tippy
+                        interactive
+                        visible={searchResult.length > 0}
+                        render={(attrs) => (
+                            <div className={cx('search-result')} tabIndex="-1" {...attrs}>
+                                <PopperWrapper>
+                                    <h4 className={cx('search-title')}>Tài khoản</h4>
+                                    <AccountItem />
+                                    <AccountItem />
+                                    <AccountItem />
+                                    <AccountItem />
+                                </PopperWrapper>
+                            </div>
+                        )}
+                    >
+                        <input type="text" placeholder="Search" spellCheck={false} />
+                    </Tippy>
                     <button className={cx('clear')}>
                         <AiFillCloseCircle />
                     </button>
@@ -89,7 +117,10 @@ function Header() {
                         <BsSearch />
                     </button>
                 </div>
-                <div className={cx('action')}></div>
+                <div className={cx('action')}>
+                    <Button text>Login</Button>
+                    <Button primary>Login</Button>
+                </div>
             </div>
         </header>
     );
